@@ -517,15 +517,19 @@ function envianotes(formObject) {
         if (dianasavaluacio==="yes"){
           var pre_sheet = llibreActual.getSheetByName(nom_full_dianes);
           if (pre_sheet!=null){
+            const idt = SpreadsheetApp.getActive().getId(); //NOU
             var charts = pre_sheet.getCharts();
             var chartBlobs=new Array(charts.length); 
             var emailImages={};
-            var builder = charts[i].modify();
-            //builder.setOption('vAxes.0.viewWindow.max', 4)
-            //builder.setOption('vAxes.0.viewWindow.min', 0)
-            //builder.setOption('vAxis.format', '#');
-            var newchart = builder.build();
-            chartBlobs[i]= newchart.getAs('image/png');          
+            //var builder = charts[i].modify();
+            //var newchart = builder.build();
+            //chartBlobs[i]= newchart.getAs('image/png');          
+           
+            const token = ScriptApp.getOAuthToken(); //NOU project requires https://www.googleapis.com/auth/spreadsheets scope
+            const baseUrl = 'https://docs.google.com/spreadsheets/d/'+idt+'/embed/oimg?access_token='+token+'&disposition=ATTACHMENT&bo=false&filetype=png&oid='; //NOU
+            const url = baseUrl + charts[i].getChartId();//NOU
+            chartBlobs[i] = UrlFetchApp.fetch(url).getBlob();//NOU
+            
             cosmissatge= cosmissatge + "<p align='center'><img src='cid:chart"+i+"'></p>";
             emailImages["chart"+i]= chartBlobs[i];
             //Enviem els missatges amb imatges
