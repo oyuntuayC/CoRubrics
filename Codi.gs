@@ -514,3 +514,11 @@ function onOpen(e) {
     };
   };
 };
+
+function prova(){
+    var properties = PropertiesService.getDocumentProperties();
+    var importacio = properties.getProperty('Importacio');
+    importacio= "0";
+    properties.setProperty('Importacio', "0");
+    onOpen();
+}

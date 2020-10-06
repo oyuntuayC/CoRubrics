@@ -517,7 +517,7 @@ function envianotes(formObject) {
         if (dianasavaluacio==="yes"){
           var pre_sheet = llibreActual.getSheetByName(nom_full_dianes);
           if (pre_sheet!=null){
-            const idt = SpreadsheetApp.getActive().getId(); //NOU
+            var idt = SpreadsheetApp.getActive().getId(); //NOU
             var charts = pre_sheet.getCharts();
             var chartBlobs=new Array(charts.length); 
             var emailImages={};
@@ -525,9 +525,9 @@ function envianotes(formObject) {
             //var newchart = builder.build();
             //chartBlobs[i]= newchart.getAs('image/png');          
            
-            const token = ScriptApp.getOAuthToken(); //NOU project requires https://www.googleapis.com/auth/spreadsheets scope
-            const baseUrl = 'https://docs.google.com/spreadsheets/d/'+idt+'/embed/oimg?access_token='+token+'&disposition=ATTACHMENT&bo=false&filetype=png&oid='; //NOU
-            const url = baseUrl + charts[i].getChartId();//NOU
+            var token = ScriptApp.getOAuthToken(); //NOU project requires https://www.googleapis.com/auth/spreadsheets scope
+            var baseUrl = 'https://docs.google.com/spreadsheets/d/'+idt+'/embed/oimg?access_token='+token+'&disposition=ATTACHMENT&bo=false&filetype=png&oid='; //NOU
+            var url = baseUrl + charts[i].getChartId();//NOU
             chartBlobs[i] = UrlFetchApp.fetch(url).getBlob();//NOU
             
             cosmissatge= cosmissatge + "<p align='center'><img src='cid:chart"+i+"'></p>";
@@ -3877,7 +3877,7 @@ function docunotes(formObject) {
       var nfg= "Nota global";
       var cpf ="Comentaris del professor: ";
       var cco ="Comentaris dels companys: ";
-      var cav ="Comentaris del propi alumne: ";
+      var cav ="Comentaris del mateix alumne: ";
       var txt_nom_alumne = "Alumne/a";
       break;
     case "es":
@@ -3889,7 +3889,7 @@ function docunotes(formObject) {
       var nfg= "Nota global";
       var cpf ="Comentarios del profesor: ";
       var cco ="Comentarios de los compañeros: ";
-      var cav ="Comentarios del propio alumno: ";
+      var cav ="Comentarios del mismo alumno: ";
       var txt_nom_alumne = "Alumno";
       break;
     case "eu":
@@ -3901,7 +3901,7 @@ function docunotes(formObject) {
       var nfg= "Nota globala";
       var cpf ="Irakaslearen iruzkina: ";
       var cco ="Ikasleen iruzkinak: ";
-      var cav ="Comentaris del propi alumne: ";
+      var cav ="Comentarios del mismo alumno: ";
       var txt_nom_alumne = "Ikasleak";
       break;
     case "fr":
@@ -4222,16 +4222,19 @@ function docunotes(formObject) {
           body.appendParagraph(cav+rangmitjanes.getCell(i+4,rangmitjanes.getNumColumns()).getValue());
         };
         var pre_sheet = llibreActual.getSheetByName(nom_full_dianes);
-        if (pre_sheet!=null){
+        if (dianasavaluacio==="yes" && pre_sheet!=null){
+          var idt = SpreadsheetApp.getActive().getId(); //NOU
           var charts = pre_sheet.getCharts();
           var chartBlobs=new Array(charts.length); 
           var emailImages={};
-          var builder = charts[i].modify();
-          var newchart = builder.build();
-          chartBlobs[i]= newchart.getAs('image/png');          
-        };         
-        //Inserir la diana
-        if (dianasavaluacio==="yes" && pre_sheet!=null){
+          //var builder = charts[i].modify();
+          //var newchart = builder.build();
+          //chartBlobs[i]= newchart.getAs('image/png');    
+          var token = ScriptApp.getOAuthToken(); //NOU project requires https://www.googleapis.com/auth/spreadsheets scope
+          var baseUrl = 'https://docs.google.com/spreadsheets/d/'+idt+'/embed/oimg?access_token='+token+'&disposition=ATTACHMENT&bo=false&filetype=png&oid='; //NOU
+          var url = baseUrl + charts[i].getChartId();//NOU
+          chartBlobs[i] = UrlFetchApp.fetch(url).getBlob();//NOU  
+          //Inserir la diana
           var img = body.appendParagraph("");
           img.appendInlineImage(chartBlobs[i]);
           var style = {};
