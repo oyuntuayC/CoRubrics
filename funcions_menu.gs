@@ -973,8 +973,9 @@ function creaFormulari() {
       var folder = folders.next();  //Agafem la primer carpeta.  
       if (folder.getName()!=DriveApp.getRootFolder().getName()){  //Si es troba a La Meva Unitat, no movem el formulari
         var fitxer = DriveApp.getFileById(formid);
-        folder.addFile(fitxer);
-        DriveApp.removeFile(fitxer);    
+        fitxer.moveTo(folder);
+        //folder.addFile(fitxer);
+        //DriveApp.removeFile(fitxer);    
       };
       //Deso l'ID en un ScriptdB   
       var documentProperties = PropertiesService.getDocumentProperties();
@@ -2442,6 +2443,16 @@ function importacio_al(formObject){
     };
     
     matriu.sort();
+    try{
+      matriu.sort(function (a, b) {
+        const el1=a[0];
+        const el2=b[0];
+        return el1.localCompare(el2);
+      })
+    } catch (error) {
+      console.error(error);
+    }
+
     var rang_full = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(nom_full_alumnes).getRange(2,1,estudiants,2);
     rang_full.setValues(matriu);
     //importem professors
@@ -3938,8 +3949,9 @@ function docunotes(formObject) {
   var folder = folders.next();  //Agafem la primer carpeta. 
   if (folder.getName()!=DriveApp.getRootFolder().getName()){  //Si es troba a La Meva Unitat, no movem el formulari
     var fitxer = DriveApp.getFileById(docuid);
-    folder.addFile(fitxer);
-    DriveApp.removeFile(fitxer);    
+    fitxer.moveTo(folder);
+    //folder.addFile(fitxer);
+    //DriveApp.removeFile(fitxer);    
   };   
   //Obrim el document i editem el cos (body)
   var document = DocumentApp.openById(docuid);
