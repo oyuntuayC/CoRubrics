@@ -422,43 +422,78 @@ function envianotes(formObject) {
           cosmissatge= cosmissatge+'<td  colspan="1"><p align="center"><strong>'+mat_rubrica[0][k-1]+'</strong></p></td>';
         };
         if (co){
-          cosmissatge= cosmissatge+'<td  colspan="1"><p align="center"><strong>'+pc+'</strong></p></td>';
+          cosmissatge= cosmissatge+'<td rowspan="2" bgcolor="#A9F5E1" colspan="1"><p align="center"><strong>'+pc+'</strong></p></td>';
         };
         if (av){
-          cosmissatge= cosmissatge+'<td  colspan="1"><p align="center"><strong>'+pp+'</strong></p></td>';
+          cosmissatge= cosmissatge+'<td rowspan="2" bgcolor="#ffe599" colspan="1"><p align="center"><strong>'+pp+'</strong></p></td>';
         };
         if (pf){
-          cosmissatge= cosmissatge+'<td  colspan="1"><p align="center"><strong>'+ppr+'</strong></p></td>';
+          cosmissatge= cosmissatge+'<td rowspan="2" bgcolor="#F6CEF5" colspan="1"><p align="center"><strong>'+ppr+'</strong></p></td>';
         };
         
-        cosmissatge = cosmissatge+'</tr><tr>';
+        cosmissatge = cosmissatge+'</tr><tr bgcolor="#C0C0C0">';
         cosmissatge=cosmissatge+'<td><p align="center"><strong><div align="center"></strong></p></div></td>';
         for (k=2;k<rangrubrica.getNumColumns();k++){
           cosmissatge=cosmissatge+'<td><p align="center"><strong><div align="center">'+mat_rubrica[1][k-1]+'</strong></p></div></td>';
         };
-        if (co){
-          cosmissatge=cosmissatge+'<td><p align="center"><strong><div align="center"></strong></p></div></td>';
+        /*if (co){
+          cosmissatge=cosmissatge+'<td bgcolor="#A9F5E1"><p align="center"><strong><div align="center"></strong></p></div></td>';
         };
         if (av){
-          cosmissatge=cosmissatge+'<td><p align="center"><strong><div align="center"></strong></p></div></td>';
+          cosmissatge=cosmissatge+'<td bgcolor="#ffe599" ><p align="center"><strong><div align="center"></strong></p></div></td>';
         };
         if (pf){
-          cosmissatge=cosmissatge+'<td><p align="center"><strong><div align="center"></strong></p></div></td>';
-        };        
+          cosmissatge=cosmissatge+'<td bgcolor="#F6CEF5"><p align="center"><strong><div align="center"></strong></p></div></td>';
+        }; */       
         cosmissatge = cosmissatge+'</tr><tr>';
         for (z=2;z<rangrubrica.getNumRows();z++){
           cosmissatge=cosmissatge+'<td><p align="center"><strong><div align="center">'+mat_rubrica[z][0]+'</strong></p></div></td>';
           for (k=2;k<rangrubrica.getNumColumns();k++){
-            cosmissatge=cosmissatge+'<td><p align="center"><div align="center">'+mat_rubrica[z][k-1]+'</p></div></td>';
+            let color_td='#ffffff';
+            let v1=Math.round(mat_rubrica[1][k-1]);
+            let co_1=Math.round(valormitjanes[i+3][3*z-1]);
+            let av_1=Math.round(valormitjanes[i+3][3*z]);
+            let pf_1=Math.round(valormitjanes[i+3][3*z+1]);
+            let color_co=0;
+            let color_av=0;
+            let color_pf=0;
+            if (v1==co_1){ //Mirem si és la cel·la del valor de la coavaluació
+              color_co=1;
+              color_td='#A9F5E1';
+            }
+            if (v1==av_1){ //Mirem si és la cel·la del valor de la autoavaluació
+              color_av=1;
+              color_td='#ffe599';
+            }
+            if (v1==pf_1){ //Mirem si és la cel·la del valor de la avaluació profe
+              color_pf=1;
+              color_td='#F6CEF5';
+            }
+            if (color_co==1 && color_av==1 && color_pf==1){
+              color_td='#58FA58';
+            }else{
+              if (color_co==1 && color_av==1){
+                color_td='#BCA9F5';
+              }else{
+                if(color_co==1 && color_pf==1){
+                  color_td='#F5A9BC';
+                }else{
+                  if (color_av==1 && color_pf==1){
+                    color_td='#FAAC58';
+                  }
+                }
+              }
+            }
+            cosmissatge=cosmissatge+'<td bgcolor="'+color_td+'"><p align="center"><div align="center">'+mat_rubrica[z][k-1]+'</p></div></td>';
           };
           if (co){
-            cosmissatge=cosmissatge+'<td bgcolor="#66FF99"><p align="center"><strong><div align="center">'+valormitjanes[i+3][3*z-1]+'</strong></p></div></td>';
+            cosmissatge=cosmissatge+'<td bgcolor="#A9F5E1"><p align="center"><strong><div align="center">'+valormitjanes[i+3][3*z-1]+'</strong></p></div></td>';
           };
           if (av){
-            cosmissatge=cosmissatge+'<td bgcolor="#66FF99"><p align="center"><strong><div align="center">'+valormitjanes[i+3][3*z]+'</strong></p></div></td>';
+            cosmissatge=cosmissatge+'<td bgcolor="#ffe599"><p align="center"><strong><div align="center">'+valormitjanes[i+3][3*z]+'</strong></p></div></td>';
           };
           if (pf){
-            cosmissatge=cosmissatge+'<td bgcolor="#66FF99"><p align="center"><strong><div align="center">'+valormitjanes[i+3][3*z+1]+'</strong></p></div></td>';
+            cosmissatge=cosmissatge+'<td bgcolor="#F6CEF5"><p align="center"><strong><div align="center">'+valormitjanes[i+3][3*z+1]+'</strong></p></div></td>';
           };
           cosmissatge = cosmissatge+'</tr><tr>';
         };
@@ -2447,7 +2482,7 @@ function importacio_al(formObject){
       matriu.sort(function (a, b) {
         const el1=a[0];
         const el2=b[0];
-        return el1.localCompare(el2);
+        return el1.localeCompare(el2);
       })
     } catch (error) {
       console.error(error);
@@ -2481,6 +2516,15 @@ function importacio_al(formObject){
     };
     
     matriu.sort();
+    try{
+    matriu.sort(function (a, b) {
+      const el1=a[0];
+      const el2=b[0];
+      return el1.localeCompare(el2);
+    })
+    } catch (error) {
+    console.error(error);
+    }
     var rang_full = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(nom_full_prof).getRange(2,1,professors,2);
     rang_full.setValues(matriu);
     
@@ -3987,7 +4031,7 @@ function docunotes(formObject) {
         };
         if (co){
           cela =fila.appendTableCell(pc);
-          cela.setBackgroundColor('#ffe599')
+          cela.setBackgroundColor('#A9F5E1')
           cela.setVerticalAlignment(DocumentApp.VerticalAlignment.CENTER);
           var style={};
           style[DocumentApp.Attribute.BOLD] = true;
@@ -4009,7 +4053,7 @@ function docunotes(formObject) {
         };
         if (pf){
          cela = fila.appendTableCell(ppr);
-         cela.setBackgroundColor('#ffe599')
+         cela.setBackgroundColor('#F6CEF5')
          cela.setVerticalAlignment(DocumentApp.VerticalAlignment.CENTER);
          var style={};
           style[DocumentApp.Attribute.BOLD] = true;
@@ -4035,7 +4079,7 @@ function docunotes(formObject) {
         if (co){
           cela = fila.appendTableCell("");
           cela.setVerticalAlignment(DocumentApp.VerticalAlignment.CENTER);
-          cela.setBackgroundColor('#ffe599');
+          cela.setBackgroundColor('#A9F5E1');
           var style={};
           style[DocumentApp.Attribute.BOLD] = true;
           style[DocumentApp.Attribute.HORIZONTAL_ALIGNMENT] = DocumentApp.HorizontalAlignment.CENTER;
@@ -4055,7 +4099,7 @@ function docunotes(formObject) {
         if (pf){
           cela=fila.appendTableCell("");
           cela.setVerticalAlignment(DocumentApp.VerticalAlignment.CENTER);
-          cela.setBackgroundColor('#ffe599');
+          cela.setBackgroundColor('#F6CEF5');
           var style={};
           style[DocumentApp.Attribute.BOLD] = true;
           style[DocumentApp.Attribute.HORIZONTAL_ALIGNMENT] = DocumentApp.HorizontalAlignment.CENTER;
@@ -4073,6 +4117,40 @@ function docunotes(formObject) {
           cela.getChild(0).setAttributes(style);
           for (k=2;k<rangrubrica.getNumColumns();k++){
             cela = fila.appendTableCell(mat_rubrica[z][k-1]);
+            let v1=Math.round(mat_rubrica[1][k-1]);
+            let co_1=Math.round(valormitjanes[i+3][3*z-1]);
+            let av_1=Math.round(valormitjanes[i+3][3*z]);
+            let pf_1=Math.round(valormitjanes[i+3][3*z+1]);
+            let color_co=0;
+            let color_av=0;
+            let color_pf=0;
+            if (v1==co_1){ //Mirem si és la cel·la del valor de la coavaluació
+              color_co=1;
+              cela.setBackgroundColor('#A9F5E1');
+            }
+            if (v1==av_1){ //Mirem si és la cel·la del valor de la autoavaluació
+              color_av=1;
+              cela.setBackgroundColor('#ffe599');
+            }
+            if (v1==pf_1){ //Mirem si és la cel·la del valor de la avaluació profe
+              color_pf=1;
+              cela.setBackgroundColor('#F6CEF5');
+            }
+            if (color_co==1 && color_av==1 && color_pf==1){
+              cela.setBackgroundColor('#58FA58');
+            }else{
+              if (color_co==1 && color_av==1){
+                cela.setBackgroundColor('#BCA9F5');
+              }else{
+                if(color_co==1 && color_pf==1){
+                  cela.setBackgroundColor('#F5A9BC');
+                }else{
+                  if (color_av==1 && color_pf==1){
+                    cela.setBackgroundColor('#FAAC58');
+                  }
+                }
+              }
+            }
             cela.setVerticalAlignment(DocumentApp.VerticalAlignment.CENTER);
             var style={};
             style[DocumentApp.Attribute.BOLD] = true;
@@ -4082,7 +4160,7 @@ function docunotes(formObject) {
           };
           if (co){
             cela = fila.appendTableCell(valormitjanes[i+3][3*z-1]);
-            cela.setBackgroundColor('#ffe599');
+            cela.setBackgroundColor('#A9F5E1');
             cela.setVerticalAlignment(DocumentApp.VerticalAlignment.CENTER);
             var style={};
             style[DocumentApp.Attribute.BOLD] = true;
@@ -4102,7 +4180,7 @@ function docunotes(formObject) {
           };
           if (pf){
             cela = fila.appendTableCell(valormitjanes[i+3][3*z+1]);
-            cela.setBackgroundColor('#ffe599');
+            cela.setBackgroundColor('#F6CEF5');
             cela.setVerticalAlignment(DocumentApp.VerticalAlignment.CENTER);
             style[DocumentApp.Attribute.FONT_SIZE] = 12;
             var style={};
